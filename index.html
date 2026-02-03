@@ -201,23 +201,31 @@
   noBtn.addEventListener("touchstart", () => moveNoButton());
 
   yesBtn.addEventListener("click", () => {
-    // Confetti effect
     confetti({
       particleCount: 150,
       spread: 70,
       origin: { y: 0.6 }
     });
 
-    // Create overlay with lovely message
+    // Create overlay
     const overlay = document.createElement("div");
     overlay.className = "overlay";
     overlay.innerHTML = `
       <h1>YAYYY!!! 💖🎉</h1>
-      <p>You just made my heart so happy 💕</p>
-      <p>Every moment with you feels magical ✨</p>
-      <p>Thank you for being the most wonderful Valentine ❤️</p>
+      <p class="msg">You just made my heart so happy 💕</p>
+      <p class="msg">Every moment with you feels magical ✨</p>
+      <p class="msg">Thank you for being the most wonderful Valentine ❤️</p>
     `;
     document.body.appendChild(overlay);
+
+    // Start animations after render
+    setTimeout(() => {
+      const messages = overlay.querySelectorAll('.msg');
+      messages.forEach((p, i) => {
+        p.style.animation = `fadeIn 1s forwards`;
+        p.style.animationDelay = `${0.5 + i*0.5}s`;
+      });
+    }, 50); // tiny delay to let browser render overlay
 
     // Floating hearts on overlay
     const heartInterval = setInterval(() => {
@@ -228,7 +236,6 @@
       heart.style.fontSize = 16 + Math.random() * 25 + "px";
       heart.style.animationDuration = 4 + Math.random() * 4 + "s";
       overlay.appendChild(heart);
-
       setTimeout(() => heart.remove(), 8000);
     }, 300);
 
@@ -242,10 +249,9 @@
       followHeart.style.fontSize = 14 + Math.random() * 20 + "px";
       followHeart.style.animationDuration = 3 + Math.random() * 2 + "s";
       overlay.appendChild(followHeart);
-
       setTimeout(() => followHeart.remove(), 2000);
     });
-  });
+});
 
   // Floating hearts on main page
   setInterval(() => {
@@ -263,3 +269,4 @@
 
 </body>
 </html>
+
