@@ -19,6 +19,7 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    position: relative;
   }
 
   .container {
@@ -48,6 +49,11 @@
     border-radius: 30px;
     border: none;
     cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  button:hover {
+    transform: scale(1.05);
   }
 
   #yesBtn {
@@ -77,6 +83,7 @@
     font-size: 20px;
     animation: floatUp 6s linear infinite;
     opacity: 0.7;
+    pointer-events: none;
   }
 
   @keyframes floatUp {
@@ -89,12 +96,57 @@
       opacity: 0;
     }
   }
+
+  /* Overlay for YES message */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg,#ffdde1,#ee9ca7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #fff;
+    text-align: center;
+    z-index: 10;
+    overflow: hidden;
+  }
+
+  .overlay h1 {
+    font-size: 3em;
+    margin-bottom: 15px;
+    animation: pop 0.5s ease;
+  }
+
+  .overlay p {
+    font-size: 1.5em;
+    margin: 5px 0;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+  }
+
+  .overlay p:nth-child(2) { animation-delay: 0.5s; }
+  .overlay p:nth-child(3) { animation-delay: 1s; }
+  .overlay p:nth-child(4) { animation-delay: 1.5s; }
+
+  @keyframes pop {
+    0% { transform: scale(0); opacity:0; }
+    100% { transform: scale(1); opacity:1; }
+  }
+
+  @keyframes fadeIn {
+    0% { opacity:0; transform: translateY(20px); }
+    100% { opacity:1; transform: translateY(0); }
+  }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="container" id="mainContainer">
   <h1>Will you be my Valentine Petra Mary Prasad? 💖</h1>
   <div class="buttons">
     <button id="yesBtn">YES 💘</button>
@@ -104,14 +156,12 @@
 
 <button id="noBtn">NO 😜</button>
 
-<audio id="yesSound" src="yes.mp3"></audio>
-
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
   const noBtn = document.getElementById("noBtn");
   const yesBtn = document.getElementById("yesBtn");
-  const yesSound = document.getElementById("yesSound");
+  const mainContainer = document.getElementById("mainContainer");
 
   let speed = 1;
 
@@ -151,32 +201,53 @@
   noBtn.addEventListener("touchstart", () => moveNoButton());
 
   yesBtn.addEventListener("click", () => {
-    yesSound.play();
-
+    // Confetti effect
     confetti({
       particleCount: 150,
       spread: 70,
       origin: { y: 0.6 }
     });
 
-    document.body.innerHTML = `
-      <div style="
-        height:100vh;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        flex-direction:column;
-        background:linear-gradient(135deg,#ffdde1,#ee9ca7);
-        color:#fff;
-        text-align:center;
-      ">
-        <h1>YAYYY!!! 💖🎉</h1>
-        <p>You just made my heart so happy 💕</p>
-      </div>
+    // Create overlay with lovely message
+    const overlay = document.createElement("div");
+    overlay.className = "overlay";
+    overlay.innerHTML = `
+      <h1>YAYYY!!! 💖🎉</h1>
+      <p>You just made my heart so happy 💕</p>
+      <p>Every moment with you feels magical ✨</p>
+      <p>Thank you for being the most wonderful Valentine ❤️</p>
     `;
+    document.body.appendChild(overlay);
+
+    // Floating hearts on overlay
+    const heartInterval = setInterval(() => {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerText = "💖";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = 16 + Math.random() * 25 + "px";
+      heart.style.animationDuration = 4 + Math.random() * 4 + "s";
+      overlay.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 8000);
+    }, 300);
+
+    // Hearts follow mouse on overlay
+    overlay.addEventListener("mousemove", (e) => {
+      const followHeart = document.createElement("div");
+      followHeart.className = "heart";
+      followHeart.innerText = "💘";
+      followHeart.style.left = e.clientX + "px";
+      followHeart.style.top = e.clientY + "px";
+      followHeart.style.fontSize = 14 + Math.random() * 20 + "px";
+      followHeart.style.animationDuration = 3 + Math.random() * 2 + "s";
+      overlay.appendChild(followHeart);
+
+      setTimeout(() => followHeart.remove(), 2000);
+    });
   });
 
-  // Floating hearts generator
+  // Floating hearts on main page
   setInterval(() => {
     const heart = document.createElement("div");
     heart.className = "heart";
@@ -192,4 +263,3 @@
 
 </body>
 </html>
-
