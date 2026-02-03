@@ -103,72 +103,77 @@
     <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_5c4d88e3b0.mp3" type="audio/mpeg">
   </audio>
 
-  <script>
-    const noBtn = document.getElementById("noBtn");
-    const yesBtn = document.getElementById("yesBtn");
-    const yesSound = document.getElementById("yesSound");
+<script>
+  const noBtn = document.getElementById("noBtn");
+  const yesBtn = document.getElementById("yesBtn");
+  const yesSound = document.getElementById("yesSound");
 
-    let speedMultiplier = 1;
+  let speedMultiplier = 1;
 
-    function moveNoButton() {
-      const padding = 20;
-      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+  function moveNoButton() {
+    const padding = 20;
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
 
-      noBtn.style.transition = `left ${0.3 / speedMultiplier}s, top ${0.3 / speedMultiplier}s`;
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
+    noBtn.style.transition = `left ${0.3 / speedMultiplier}s, top ${0.3 / speedMultiplier}s`;
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
 
-      speedMultiplier += 0.3; // gets faster every try 😈
-    }
+    speedMultiplier += 0.3;
+  }
 
-    noBtn.addEventListener("mouseover", moveNoButton);
-    noBtn.addEventListener("touchstart", moveNoButton);
+  // 🔥 NEW: move NO button immediately on page load
+  window.addEventListener("load", () => {
+    moveNoButton();
+  });
 
-    yesBtn.addEventListener("click", () => {
-      yesSound.play();
+  noBtn.addEventListener("mouseover", moveNoButton);
+  noBtn.addEventListener("touchstart", moveNoButton);
 
-      document.body.innerHTML = `
-        <div style="
-          height:100vh;
-          display:flex;
-          justify-content:center;
-          align-items:center;
-          text-align:center;
-          font-family:Poppins,sans-serif;
-          background:linear-gradient(135deg,#ff758c,#ff7eb3);
-          color:white;
-          padding:20px;
-          font-size:1.8rem;
-        ">
-          💘 Yayyyy! You just made my heart do backflips 💘<br><br>
-          Can't wait for our cutest Valentine ever 😍
-        </div>
-      `;
-    });
+  yesBtn.addEventListener("click", () => {
+    yesSound.play();
 
-    // Floating hearts generator
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.classList.add("heart");
-      heart.innerHTML = "❤️";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.fontSize = Math.random() * 20 + 15 + "px";
-      heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+    document.body.innerHTML = `
+      <div style="
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        text-align:center;
+        font-family:Poppins,sans-serif;
+        background:linear-gradient(135deg,#ff758c,#ff7eb3);
+        color:white;
+        padding:20px;
+        font-size:1.8rem;
+      ">
+        💘 Yayyyy! You just made my heart do backflips 💘<br><br>
+        Can't wait for our cutest Valentine ever 😍
+      </div>
+    `;
+  });
 
-      document.body.appendChild(heart);
+  // Floating hearts
+  function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = Math.random() * 20 + 15 + "px";
+    heart.style.animationDuration = Math.random() * 3 + 3 + "s";
 
-      setTimeout(() => {
-        heart.remove();
-      }, 6000);
-    }
+    document.body.appendChild(heart);
 
-    setInterval(createHeart, 400);
-  </script>
+    setTimeout(() => heart.remove(), 6000);
+  }
+
+  setInterval(createHeart, 400);
+</script>
+
 
 </body>
 </html>
+
 
