@@ -21,13 +21,14 @@
       background: linear-gradient(135deg, #ff758c, #ff7eb3);
     }
 
-    /* Floating Hearts */
+    /* Floating hearts */
     .heart {
       position: fixed;
       bottom: -20px;
       font-size: 20px;
       animation: floatUp linear forwards;
       opacity: 0.8;
+      pointer-events: none;
     }
 
     @keyframes floatUp {
@@ -41,7 +42,7 @@
       background: white;
       padding: 30px 20px;
       width: 90%;
-      max-width: 350px;
+      max-width: 360px;
       border-radius: 20px;
       text-align: center;
       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
@@ -55,7 +56,7 @@
       margin-bottom: 10px;
     }
 
-    p {
+    .subtitle {
       color: #555;
       font-size: 0.95rem;
       margin-bottom: 25px;
@@ -83,97 +84,113 @@
     #noBtn {
       background: #e0e0e0;
       position: fixed;
+      visibility: hidden; /* 🔥 prevents initial overlap */
+    }
+
+    .shy-text {
+      margin-top: 18px;
+      font-size: 0.8rem;
+      color: #888;
+      font-style: italic;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>Will you be my Valentine Petra Mary Prasad? 💕</h1>
-    <p>Because life would be cuter with you in it 🥹</p>
+    <h1>Will you be my Valentine? 💕</h1>
+    <p class="subtitle">Because life would be cuter with you in it 🥹</p>
 
     <div class="buttons">
       <button id="yesBtn">Yes 💖</button>
       <button id="noBtn">No 😢</button>
     </div>
+
+    <p class="shy-text">
+      * The NO button is shy and runs away 🙈 *
+    </p>
   </div>
 
   <!-- Cute sound -->
-  <audio id="yesSound">
+  <audio id="yesSound" preload="auto">
     <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_5c4d88e3b0.mp3" type="audio/mpeg">
   </audio>
 
-<script>
-  const noBtn = document.getElementById("noBtn");
-  const yesBtn = document.getElementById("yesBtn");
-  const yesSound = document.getElementById("yesSound");
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const yesSound = document.getElementById("yesSound");
 
-  let speedMultiplier = 1;
+    let speedMultiplier = 1;
+    let audioUnlocked = false;
 
-  function moveNoButton() {
-    const padding = 20;
-    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+    /* 🔊 Unlock audio on first interaction */
+    function unlockAudio() {
+      if (!audioUnlocked) {
+        yesSound.play().then(() => {
+          yesSound.pause();
+          yesSound.currentTime = 0;
+          audioUnlocked = true;
+        }).catch(() => {});
+      }
+    }
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+    document.addEventListener("click", unlockAudio, { once: true });
+    document.addEventListener("touchstart", unlockAudio, { once: true });
 
-    noBtn.style.transition = `left ${0.3 / speedMultiplier}s, top ${0.3 / speedMultiplier}s`;
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+    /* 😈 Move NO button */
+    function moveNoButton(show = true) {
+      const padding = 20;
+      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-    speedMultiplier += 0.3;
-  }
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
 
-  // 🔥 NEW: move NO button immediately on page load
-  window.addEventListener("load", () => {
-    moveNoButton();
-  });
+      noBtn.style.transition = `left ${0.3 / speedMultiplier}s, top ${0.3 / speedMultiplier}s`;
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
 
-  noBtn.addEventListener("mouseover", moveNoButton);
-  noBtn.addEventListener("touchstart", moveNoButton);
+      if (show) {
+        noBtn.style.visibility = "visible";
+      }
 
-  yesBtn.addEventListener("click", () => {
-    yesSound.play();
+      speedMultiplier += 0.3;
+    }
 
-    document.body.innerHTML = `
-      <div style="
-        height:100vh;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        text-align:center;
-        font-family:Poppins,sans-serif;
-        background:linear-gradient(135deg,#ff758c,#ff7eb3);
-        color:white;
-        padding:20px;
-        font-size:1.8rem;
-      ">
-        💘 Yayyyy! You just made my heart do backflips 💘<br><br>
-        Can't wait for our cutest Valentine ever 😍
-      </div>
-    `;
-  });
+    /* 🔥 Position NO button BEFORE showing */
+    window.addEventListener("DOMContentLoaded", () => {
+      moveNoButton(true);
+    });
 
-  // Floating hearts
-  function createHeart() {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "❤️";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = Math.random() * 20 + 15 + "px";
-    heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+    noBtn.addEventListener("mouseover", () => moveNoButton());
+    noBtn.addEventListener("touchstart", () => moveNoButton());
 
-    document.body.appendChild(heart);
+    /* 💖 YES click */
+    yesBtn.addEventListener("click", () => {
+      yesSound.currentTime = 0;
+      yesSound.play();
 
-    setTimeout(() => heart.remove(), 6000);
-  }
+      document.body.innerHTML = `
+        <div style="
+          height:100vh;
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          text-align:center;
+          font-family:Poppins,sans-serif;
+          background:linear-gradient(135deg,#ff758c,#ff7eb3);
+          color:white;
+          padding:20px;
+          font-size:1.8rem;
+        ">
+          💘 Yayyyy! You just made my heart do backflips 💘<br><br>
+          Can't wait for our cutest Valentine ever 😍
+        </div>
+      `;
+    });
 
-  setInterval(createHeart, 400);
-</script>
-
-
-</body>
-</html>
-
-
+    /* ❤️ Floating hearts */
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.c
