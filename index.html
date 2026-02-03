@@ -1,196 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Be My Valentine 💘</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Be My Valentine 💘</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
 
-    body {
-      margin: 0;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #ff758c, #ff7eb3);
-    }
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
 
-    /* Floating hearts */
-    .heart {
-      position: fixed;
-      bottom: -20px;
-      font-size: 20px;
-      animation: floatUp linear forwards;
-      opacity: 0.8;
-      pointer-events: none;
-    }
+  .container {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    z-index: 2;
+  }
 
-    @keyframes floatUp {
-      to {
-        transform: translateY(-110vh);
-        opacity: 0;
-      }
-    }
+  h1 {
+    color: #ff4d6d;
+    margin-bottom: 20px;
+  }
 
-    .container {
-      background: white;
-      padding: 30px 20px;
-      width: 90%;
-      max-width: 360px;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-      position: relative;
-      z-index: 2;
-    }
+  .buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    position: relative;
+  }
 
-    h1 {
-      color: #ff4d6d;
-      font-size: 1.6rem;
-      margin-bottom: 10px;
-    }
+  button {
+    padding: 12px 28px;
+    font-size: 18px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+  }
 
-    .subtitle {
-      color: #555;
-      font-size: 0.95rem;
-      margin-bottom: 25px;
-    }
+  #yesBtn {
+    background: #ff4d6d;
+    color: white;
+    z-index: 1;
+  }
 
-    .buttons {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-    }
+  #noBtn {
+    background: #e0e0e0;
+    position: fixed;
+    opacity: 0;
+    z-index: 3;
+  }
 
-    button {
-      padding: 12px 22px;
-      border: none;
-      border-radius: 30px;
-      font-size: 1rem;
-      cursor: pointer;
-    }
+  .note {
+    margin-top: 15px;
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+  }
 
-    #yesBtn {
-      background: #ff4d6d;
-      color: white;
-    }
+  /* Floating hearts */
+  .heart {
+    position: absolute;
+    bottom: -20px;
+    font-size: 20px;
+    animation: floatUp 6s linear infinite;
+    opacity: 0.7;
+  }
 
-    #noBtn {
-      background: #e0e0e0;
-      position: fixed;
-      visibility: hidden; /* 🔥 prevents initial overlap */
+  @keyframes floatUp {
+    0% {
+      transform: translateY(0) scale(1);
+      opacity: 1;
     }
-
-    .shy-text {
-      margin-top: 18px;
-      font-size: 0.8rem;
-      color: #888;
-      font-style: italic;
+    100% {
+      transform: translateY(-120vh) scale(1.5);
+      opacity: 0;
     }
-  </style>
+  }
+</style>
 </head>
+
 <body>
 
-  <div class="container">
-    <h1>Will you be my Valentine? 💕</h1>
-    <p class="subtitle">Because life would be cuter with you in it 🥹</p>
-
-    <div class="buttons">
-      <button id="yesBtn">Yes 💖</button>
-      <button id="noBtn">No 😢</button>
-    </div>
-
-    <p class="shy-text">
-      * The NO button is shy and runs away 🙈 *
-    </p>
+<div class="container">
+  <h1>Will you be my Valentine? 💖</h1>
+  <div class="buttons">
+    <button id="yesBtn">YES 💘</button>
   </div>
+  <div class="note">* the NO button is shy 🙈</div>
+</div>
 
-  <!-- Cute sound -->
-  <audio id="yesSound" preload="auto">
-    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_5c4d88e3b0.mp3" type="audio/mpeg">
-  </audio>
+<button id="noBtn">NO 😜</button>
 
-  <script>
-    const noBtn = document.getElementById("noBtn");
-    const yesBtn = document.getElementById("yesBtn");
-    const yesSound = document.getElementById("yesSound");
+<audio id="yesSound" src="yes.mp3"></audio>
 
-    let speedMultiplier = 1;
-    let audioUnlocked = false;
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    /* 🔊 Unlock audio on first interaction */
-    function unlockAudio() {
-      if (!audioUnlocked) {
-        yesSound.play().then(() => {
-          yesSound.pause();
-          yesSound.currentTime = 0;
-          audioUnlocked = true;
-        }).catch(() => {});
-      }
+<script>
+  const noBtn = document.getElementById("noBtn");
+  const yesBtn = document.getElementById("yesBtn");
+  const yesSound = document.getElementById("yesSound");
+
+  let speed = 1;
+
+  function moveNoButton(first = false) {
+    const padding = 20;
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+    let x, y;
+
+    if (first) {
+      x = Math.random() * maxX;
+      y = window.innerHeight - noBtn.offsetHeight - padding;
+    } else {
+      x = Math.random() * maxX;
+      y = Math.random() * maxY;
     }
 
-    document.addEventListener("click", unlockAudio, { once: true });
-    document.addEventListener("touchstart", unlockAudio, { once: true });
+    noBtn.style.transition = `
+      left ${0.35 / speed}s,
+      top ${0.35 / speed}s,
+      opacity 0.2s
+    `;
 
-    /* 😈 Move NO button */
-    function moveNoButton(show = true) {
-      const padding = 20;
-      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+    noBtn.style.opacity = "1";
 
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
+    speed += 0.3;
+  }
 
-      noBtn.style.transition = `left ${0.3 / speedMultiplier}s, top ${0.3 / speedMultiplier}s`;
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
+  window.addEventListener("DOMContentLoaded", () => {
+    moveNoButton(true);
+  });
 
-      if (show) {
-        noBtn.style.visibility = "visible";
-      }
+  noBtn.addEventListener("mouseover", () => moveNoButton());
+  noBtn.addEventListener("touchstart", () => moveNoButton());
 
-      speedMultiplier += 0.3;
-    }
+  yesBtn.addEventListener("click", () => {
+    yesSound.play();
 
-    /* 🔥 Position NO button BEFORE showing */
-    window.addEventListener("DOMContentLoaded", () => {
-      moveNoButton(true);
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 }
     });
 
-    noBtn.addEventListener("mouseover", () => moveNoButton());
-    noBtn.addEventListener("touchstart", () => moveNoButton());
+    document.body.innerHTML = `
+      <div style="
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        flex-direction:column;
+        background:linear-gradient(135deg,#ffdde1,#ee9ca7);
+        color:#fff;
+        text-align:center;
+      ">
+        <h1>YAYYY!!! 💖🎉</h1>
+        <p>You just made my heart so happy 💕</p>
+      </div>
+    `;
+  });
 
-    /* 💖 YES click */
-    yesBtn.addEventListener("click", () => {
-      yesSound.currentTime = 0;
-      yesSound.play();
+  // Floating hearts generator
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = 16 + Math.random() * 20 + "px";
+    heart.style.animationDuration = 4 + Math.random() * 4 + "s";
+    document.body.appendChild(heart);
 
-      document.body.innerHTML = `
-        <div style="
-          height:100vh;
-          display:flex;
-          justify-content:center;
-          align-items:center;
-          text-align:center;
-          font-family:Poppins,sans-serif;
-          background:linear-gradient(135deg,#ff758c,#ff7eb3);
-          color:white;
-          padding:20px;
-          font-size:1.8rem;
-        ">
-          💘 Yayyyy! You just made my heart do backflips 💘<br><br>
-          Can't wait for our cutest Valentine ever 😍
-        </div>
-      `;
-    });
+    setTimeout(() => heart.remove(), 8000);
+  }, 400);
+</script>
 
-    /* ❤️ Floating hearts */
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.c
+</body>
+</html>
