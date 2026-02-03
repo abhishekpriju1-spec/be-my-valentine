@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Be My Valentine 💘</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    }
+
+    /* Floating Hearts */
+    .heart {
+      position: fixed;
+      bottom: -20px;
+      font-size: 20px;
+      animation: floatUp linear forwards;
+      opacity: 0.8;
+    }
+
+    @keyframes floatUp {
+      to {
+        transform: translateY(-110vh);
+        opacity: 0;
+      }
+    }
+
+    .container {
+      background: white;
+      padding: 30px 20px;
+      width: 90%;
+      max-width: 350px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      color: #ff4d6d;
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #555;
+      font-size: 0.95rem;
+      margin-bottom: 25px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    button {
+      padding: 12px 22px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    #yesBtn {
+      background: #ff4d6d;
+      color: white;
+    }
+
+    #noBtn {
+      background: #e0e0e0;
+      position: fixed;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Will you be my Valentine Petra Mary Prasad? 💕</h1>
+    <p>Because life would be cuter with you in it 🥹</p>
+
+    <div class="buttons">
+      <button id="yesBtn">Yes 💖</button>
+      <button id="noBtn">No 😢</button>
+    </div>
+  </div>
+
+  <!-- Cute sound -->
+  <audio id="yesSound">
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_5c4d88e3b0.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const yesSound = document.getElementById("yesSound");
+
+    let speedMultiplier = 1;
+
+    function moveNoButton() {
+      const padding = 20;
+      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      noBtn.style.transition = `left ${0.3 / speedMultiplier}s, top ${0.3 / speedMultiplier}s`;
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+
+      speedMultiplier += 0.3; // gets faster every try 😈
+    }
+
+    noBtn.addEventListener("mouseover", moveNoButton);
+    noBtn.addEventListener("touchstart", moveNoButton);
+
+    yesBtn.addEventListener("click", () => {
+      yesSound.play();
+
+      document.body.innerHTML = `
+        <div style="
+          height:100vh;
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          text-align:center;
+          font-family:Poppins,sans-serif;
+          background:linear-gradient(135deg,#ff758c,#ff7eb3);
+          color:white;
+          padding:20px;
+          font-size:1.8rem;
+        ">
+          💘 Yayyyy! You just made my heart do backflips 💘<br><br>
+          Can't wait for our cutest Valentine ever 😍
+        </div>
+      `;
+    });
+
+    // Floating hearts generator
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerHTML = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 20 + 15 + "px";
+      heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 6000);
+    }
+
+    setInterval(createHeart, 400);
+  </script>
+
+</body>
+</html>
